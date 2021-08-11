@@ -55,9 +55,14 @@ aidl_interface {
             enabled: false,
         },
         ndk: {
+            apex_available: [
+                "//apex_available:platform",
+                "com.android.uwb",
+            ],
             vndk: {
                 enabled: true,
             },
+            min_sdk_version: "current", // TODO: Move to 32 once SDK is finalized
         },
     },
 }
