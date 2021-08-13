@@ -25,7 +25,6 @@
 #include <android/binder_manager.h>
 
 #include <fcntl.h>
-#include <hwbinder/IPCThreadState.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -65,10 +64,6 @@ string readFd(int fd) {
     ssize_t n = TEMP_FAILURE_RETRY(read(fd, &buf[0], sizeof(buf)));
     if (n < 0) return "";
     return string{buf, static_cast<size_t>(n)};
-}
-
-static inline int getCallingPid() {
-    return ::android::hardware::IPCThreadState::self()->getCallingPid();
 }
 
 static std::vector<std::string> readWakeupReasons(int fd) {
@@ -211,8 +206,8 @@ void SystemSuspend::decSuspendCounter(const string& name) {
     }
 }
 
-unique_fd SystemSuspend::reopenFileUsingFd(const int pid, const int fd, const int permission) {
-    string filePath = android::base::StringPrintf("/proc/%d/fd/%d", pid, fd);
+unique_fd SystemSuspend::reopenFileUsingFd(const int fd, const int permission) {
+    string filePath = android::base::StringPrintf("/proc/self/fd/%d", fd);
 
     unique_fd tempFd{TEMP_FAILURE_RETRY(open(filePath.c_str(), permission))};
     if (tempFd < 0) {
@@ -257,8 +252,8 @@ void SystemSuspend::initAutosuspend() {
             if (wakeupReasons == std::vector<std::string>({kUnknownWakeup})) {
                 LOG(INFO) << "Unknown/empty wakeup reason. Re-opening wakeup_reason file.";
 
-                mWakeupReasonsFd = std::move(reopenFileUsingFd(
-                    getCallingPid(), mWakeupReasonsFd.get(), O_CLOEXEC | O_RDONLY));
+                mWakeupReasonsFd =
+                    std::move(reopenFileUsingFd(mWakeupReasonsFd.get(), O_CLOEXEC | O_RDONLY));
             }
             mWakeupList.update(wakeupReasons);
 
