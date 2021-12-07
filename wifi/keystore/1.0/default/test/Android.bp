@@ -26,6 +26,7 @@ cc_test {
     defaults: [
         "VtsHalTargetTestDefaults",
         "keymint_use_latest_hal_aidl_ndk_static",
+        "keystore2_use_latest_aidl_ndk_static",
     ],
     shared_libs: [
         "libbase",
@@ -41,7 +42,6 @@ cc_test {
         "VtsHalHidlTargetTestBase",
         "android.hardware.security.secureclock-V1-ndk",
         "android.security.legacykeystore-ndk",
-        "android.system.keystore2-V1-ndk",
         "android.system.wifi.keystore@1.0",
         "libkeymint_support",
     ],
