@@ -62,7 +62,7 @@ aidl_interface {
             vndk: {
                 enabled: true,
             },
-            min_sdk_version: "current", // TODO: Move to 32 once SDK is finalized
+            min_sdk_version: "Tiramisu",
         },
     },
 }
