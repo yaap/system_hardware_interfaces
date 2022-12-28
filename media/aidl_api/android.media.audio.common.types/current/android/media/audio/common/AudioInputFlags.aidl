@@ -44,4 +44,6 @@ enum AudioInputFlags {
   HW_AV_SYNC = 6,
   DIRECT = 7,
   ULTRASOUND = 8,
+  HOTWORD_TAP = 9,
+  HW_LOOKBACK = 10,
 }
